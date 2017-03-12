@@ -23,9 +23,6 @@ public class LandingSpot : MonoBehaviour
             if (landingChild != null)
             {
                 landingChild.landing = _landing;
-
-                if (landingChild.animator != null)
-                    landingChild.animator.SetBool("landing", _landing);
             }
         }
 
@@ -49,9 +46,7 @@ public class LandingSpot : MonoBehaviour
             _idle = value;
             if (landingChild != null)
             {
-
-                if (landingChild.animator != null)
-                    landingChild.animator.SetBool("idle", _idle);
+                landingChild.idle = value;
             }
         }
 

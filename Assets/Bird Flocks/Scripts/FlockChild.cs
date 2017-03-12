@@ -62,7 +62,7 @@ public class FlockChild : MonoBehaviour
             _move = value;
             if(animator != null)
             {
-                animator.SetBool("move", value);
+                animator.SetBool("moving", value);
             }
         }
 
@@ -118,7 +118,23 @@ public class FlockChild : MonoBehaviour
     public FlockController _spawner;            //Reference to the flock controller that spawned this bird
     [HideInInspector]
     public Vector3 _wayPoint;               //Waypoint used to steer towards
-    public float _speed;                        //Current speed of bird
+
+    float _speed = 0;
+    public float speed
+    {                        //Current speed of bird
+        set
+        {
+            _speed = value;
+            if (animator != null)
+                animator.SetFloat("moveSpeed", value);
+        }
+
+        get
+        {
+            return _speed;
+        }
+
+    }
     [HideInInspector]
     public float _stuckCounter;             //prevents looping around a waypoint by increasing minimum distance to waypoint
     [HideInInspector]
@@ -150,7 +166,7 @@ public class FlockChild : MonoBehaviour
         _thisT.position = findWaypoint();
         RandomizeStartAnimationFrame();
         InitAvoidanceValues();
-        _speed = _spawner._minSpeed;
+        speed = _spawner._minSpeed;
         _spawner._activeChildren++;
         _instantiated = true;
         if (_spawner._updateDivisor > 1)
@@ -282,12 +298,12 @@ public class FlockChild : MonoBehaviour
                 _spawner.SetFlockRandomPosition();
             }
         }
-        _speed = Mathf.Lerp(_speed, _targetSpeed, _lerpCounter * _spawner._newDelta * .05f);
+        speed = Mathf.Lerp(speed, _targetSpeed, _lerpCounter * _spawner._newDelta * .05f);
         _lerpCounter++;
         //Position forward based on object rotation
         if (move)
         {
-            _thisT.position += _thisT.forward * _speed * _spawner._newDelta;
+            _thisT.position += _thisT.forward * speed * _spawner._newDelta;
             if (avoid && _spawner._birdAvoid)
                 Avoidance();
         }
@@ -405,7 +421,7 @@ public class FlockChild : MonoBehaviour
         if(animator == null)
             _model.GetComponent<Animation>().CrossFade(_spawner._flapAnimation, .2f);
         dived = true;
-        _speed = 0.0f;
+        speed = 0.0f;
         move = true;
         landing = false;
         Flap();
@@ -440,7 +456,7 @@ public class FlockChild : MonoBehaviour
         if (distance > .01f)
         {
             _targetSpeed = _spawner._minSpeed * landingSpeedModifier;
-            _thisT.position += (landingSpotT.position - _thisT.position) * Time.deltaTime * _speed * landingSpeedModifier;
+            _thisT.position += (landingSpotT.position - _thisT.position) * Time.deltaTime * speed * landingSpeedModifier;
         }
 
         move = false;
