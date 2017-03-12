@@ -220,6 +220,8 @@ public class LandingSpot : MonoBehaviour
         }
     }
 
+    WaitForSeconds waitForSecsBuf = new WaitForSeconds(0.1f);
+
     public IEnumerator ReleaseFlockChild(float minDelay, float maxDelay)
     {
         yield return new WaitForSeconds(UnityEngine.Random.Range(minDelay, maxDelay));
@@ -234,7 +236,7 @@ public class LandingSpot : MonoBehaviour
             landing = false;
             idle = false;
             landingChild.TakeOff();
-            yield return new WaitForSeconds(.1f);
+            yield return waitForSecsBuf;
             if (_controller._autoCatchDelay.x > 0)
             {
                 StartCoroutine(GetFlockChild(_controller._autoCatchDelay.x, _controller._autoCatchDelay.y));

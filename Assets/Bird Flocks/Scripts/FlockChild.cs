@@ -158,6 +158,9 @@ public class FlockChild : MonoBehaviour
     
     public Animator animator;
 
+    public bool rotateAlignLandSpotWhenIdle;
+
+
     public void Start()
     {
         FindRequiredComponents();           //Check if references to transform and model are set (These should be set in the prefab to avoid doind this once a bird is spawned, click "Fill" button in prefab)
@@ -460,13 +463,18 @@ public class FlockChild : MonoBehaviour
         }
 
         move = false;
-        
-        Quaternion rot = _thisT.rotation;
-        Vector3 rotE = rot.eulerAngles;
-        rotE.y = Mathf.LerpAngle(_thisT.rotation.eulerAngles.y, landingSpotT.rotation.eulerAngles.y, lerpCounter * Time.deltaTime * .005f);
-        rot.eulerAngles = rotE;
-        _thisT.rotation = rot;
 
+        if(rotateAlignLandSpotWhenIdle)
+        {
+            
+            Quaternion rot = _thisT.rotation;
+            Vector3 rotE = rot.eulerAngles;
+            rotE.y = Mathf.LerpAngle(_thisT.rotation.eulerAngles.y, landingSpotT.rotation.eulerAngles.y, lerpCounter * Time.deltaTime * .005f);
+            rot.eulerAngles = rotE;
+            _thisT.rotation = rot;
+        
+        }
+        
         _damping = landingTurnSpeedModifier;
     }
 
